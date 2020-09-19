@@ -9,7 +9,7 @@ services:
       SA_PASSWORD: YourStrong@Passw0rd
       
   webapi:
-    build: ./TestProject.WebAPI
+    build: SearchWebApi
     ports:
         - 443:433
         - 80:80
