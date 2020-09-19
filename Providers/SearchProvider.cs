@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Utilities.Collections;
+using Microsoft.VisualBasic.CompilerServices;
 using SearchWebApi.DB;
+using SearchWebApi.Enums;
 using SearchWebApi.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -37,8 +38,30 @@ namespace SearchWebApi.Providers
             var googleSearchTask = _googleSearchClient.SearchAsync(seachPhrase);
             var bingResult = await bingSearchTask;
             var googleResult = await googleSearchTask;
-            return Enumerable.Empty<SearchDataModel>();
-            //TODO add to db
+            var result = new List<SearchDataModel>();
+            if (bingResult.Any())
+            {
+                result.AddRange(await AddData(seachPhrase, bingResult, SearchEngine.Bing));
+            }
+            if (googleResult.Any())
+            {
+                result.AddRange(await AddData(seachPhrase, googleResult, SearchEngine.Google));
+            }
+            _dbContext.SaveChanges();
+            return result;
+        }
+
+        private async Task<IEnumerable<SearchDataModel>> AddData(string seachPhrase, IEnumerable<string> result, SearchEngine engine)
+        {
+            var searchData = result.Select(result => new SearchDataModel
+            {
+                SearchEngine = engine,
+                Request = seachPhrase,
+                Title = result,
+                EnteredDate = DateTime.UtcNow
+            });
+            await _dbContext.SearchData.AddRangeAsync(_mapper.Map<IEnumerable<SearchData>>(searchData));
+            return searchData.ToList();
         }
     }
 }

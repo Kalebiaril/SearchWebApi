@@ -6,7 +6,7 @@ namespace SearchWebApi.Profiles
     {
         public SearchMapperProfile()
         {
-            CreateMap<SearchData, SearchDataModel>();
+            CreateMap<SearchDataModel, SearchData>();
 
         }
     }

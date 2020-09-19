@@ -1,13 +1,16 @@
-﻿using SearchWebApi.Enums;
+﻿using Newtonsoft.Json.Converters;
+using SearchWebApi.Enums;
 using System;
+using System.Text.Json.Serialization;
 
 namespace SearchWebApi.DB
 {
     public class SearchDataModel
-    {      
+    {
         /// <summary>
         /// 
         /// </summary>
+    
         public SearchEngine SearchEngine { get; set; }
 
         /// <summary>

@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SearchWebApi.DB;
 using SearchWebApi.Interfaces;
+using SearchWebApi.Models;
 
 namespace SearchWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SearchController : ControllerBase
     {
         private readonly ILogger<SearchController> _logger;
@@ -23,19 +24,24 @@ namespace SearchWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<SearchDataModel>>> Get([FromBody]string seachPhrase)
+        public async Task<ActionResult<IEnumerable<SearchDataModel>>> PostSearchData([FromBody] SearchModel searchModel)
         {
-            if (string.IsNullOrWhiteSpace(seachPhrase))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("No search phrase defined");
+                return BadRequest("Model is not valid");
             }
-            var result = await _searchProvider.SearchAsync(seachPhrase);
+            var result = await _searchProvider.SearchAsync(searchModel.SearchPhrase);
             if (result.Any())
             {
-               
                 return Ok(result);
             }
             return NotFound();
+        }
+
+        [HttpGet]
+        public ActionResult<string> Get()
+        {
+            return Ok("Welcome to Search api");
         }
     }
 }

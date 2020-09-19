@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.Extensions.Configuration;
 using SearchWebApi.Interfaces;
-using System.Threading.Tasks;
-
 namespace SearchWebApi.Clients
 {
-    public class BingSearchClient : IBingSearchClient
+    public class BingSearchClient : BaseSearchClient, IBingSearchClient
     {
-        public Task<JsonResult> SearchAsync(string searchString)
+        public override string SearchEngine => "BingSearch";
+        public BingSearchClient(IConfiguration config) : base(config)
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }
