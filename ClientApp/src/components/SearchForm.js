@@ -13,7 +13,7 @@ export class SearchForm extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         var data = { SearchPhrase: this.state.searchString };
-        fetch("https://localhost:44306/api/search", {
+        fetch("/api/search", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
